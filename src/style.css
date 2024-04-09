@@ -13,6 +13,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  margin:0;
+  padding:0;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -25,7 +30,6 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -58,21 +62,7 @@ button:focus-visible {
   padding: 2em;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-}
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+#app {
+  width: 100%;
 }
