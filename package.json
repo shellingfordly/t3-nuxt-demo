@@ -9,6 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vssue/api-gitlab-v4": "^1.4.7",
+    "@vueuse/core": "^10.9.0",
+    "octokit": "^3.2.0",
+    "vssue": "^1.4.8",
     "vue": "^3.4.21",
     "vue-clerk": "^0.2.1"
   },
