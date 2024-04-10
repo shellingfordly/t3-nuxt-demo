@@ -12,7 +12,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   }
 
   async function postComment(content: string, id: string) {
-    const result = await githubComment.postComments(content, id);
+    const result = await githubComment.createComment(content, id);
     if (result.errors && result.errors.length > 0) {
       const error = result.errors[0];
 

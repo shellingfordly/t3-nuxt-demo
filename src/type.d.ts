@@ -11,3 +11,5 @@ interface GithubCommentItem {
   id: string;
   author: GithubUserItem;
 }
+
+type GithubCommentReaction = "THUMBS_UP" | "THUMBS_DOWN" | "HEART";

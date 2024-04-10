@@ -1,4 +1,10 @@
-import { getCommentsQuery, postCommentQuery } from "./query";
+import {
+  deleteCommentQuery,
+  getCommentsQuery,
+  createCommentQuery,
+  editorCommentQuery,
+  reactionComment,
+} from "./query";
 
 export class GithubComment {
   private BaseUrl = "https://api.github.com/";
@@ -9,9 +15,12 @@ export class GithubComment {
     if (_issueNodeId) this.issueNodeId = _issueNodeId;
   }
 
-  private queryMap = {
+  private apiQueryMap = {
     get: getCommentsQuery(),
-    post: postCommentQuery(),
+    post: createCommentQuery(),
+    editor: editorCommentQuery(),
+    delete: deleteCommentQuery(),
+    reaction: reactionComment(),
   };
 
   private fetch(api: string) {
@@ -43,13 +52,13 @@ export class GithubComment {
         issueId: 1,
         perPage: 10,
       },
-      query: this.queryMap.get,
+      query: this.apiQueryMap.get,
     });
 
     return result.data.repository.issue.comments.nodes;
   }
 
-  postComments(content: string, id: string) {
+  async createComment(content: string, id: string) {
     const issueNodeId = this.issueNodeId || id;
 
     return this.fetch("graphql").post({
@@ -57,26 +66,40 @@ export class GithubComment {
         issueNodeId,
         content,
       },
-      query: this.queryMap.post,
+      query: this.apiQueryMap.post,
     });
   }
 
-  // async function reaction(content: "-1" | "+1" | "heart") {
-  //   const { data } = await useFetch(
-  //     "https://api.github.com/repos/meteorlxy/vssue/issues/comments/2044452619/reactions",
-  //     {
-  //       headers: {
-  //         Authorization: "token " + import.meta.env.VITE_GITHUB_TOKEN,
-  //       },
-  //     }
-  //   ).post({
-  //     content,
-  //   });
-  //   console.log("reaction - %s - %s", content, data);
-  // }
+  async editorComment(commentId: string, content: string) {
+    const result = await this.fetch("graphql").post({
+      variables: {
+        commentId,
+        content,
+      },
+      query: this.apiQueryMap.editor,
+    });
+    return result.data.updateIssueComment.issueComment;
+  }
 
-  // function editor() {
-  //   // patch https://api.github.com/repos/meteorlxy/vssue/issues/comments/2044452619
-  //   // delete https://api.github.com/repos/meteorlxy/vssue/issues/comments/2044452619
-  // }
+  async deleteComment(commentId: string) {
+    this.fetch("graphql").post({
+      variables: {
+        commentId,
+      },
+      query: this.apiQueryMap.delete,
+    });
+  }
+
+  /**
+   * reaction: ❤️ 👍 👎
+   */
+  async reactionComment(commentId: string, content: GithubCommentReaction) {
+    return this.fetch("graphql").post({
+      variables: {
+        commentId,
+        content,
+      },
+      query: this.apiQueryMap.reaction,
+    });
+  }
 }
