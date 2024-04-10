@@ -1,9 +1,9 @@
 import { createApp } from "vue";
-import "./style.css";
 import App from "./App.vue";
 import { clerkPlugin } from "vue-clerk/plugin";
-import "virtual:uno.css";
-
+import "@unocss/reset/tailwind.css";
+import "./styles/index.css";
+import "uno.css";
 const app = createApp(App);
 
 app.use(clerkPlugin, {

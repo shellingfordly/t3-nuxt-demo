@@ -10,6 +10,7 @@ export default defineConfig({
     UnoCSS(),
     AutoImport({
       imports: ["vue", "vue-router", "@vueuse/core"],
+      dirs: ["./src/hooks"],
       dts: "./src/auto-imports.d.ts",
     }),
     Components({
