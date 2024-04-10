@@ -138,10 +138,39 @@ export function reactionComment() {
   }`;
 }
 
+export function getReactionsComment() {
+  return `\
+  query getComments(
+    $owner: String!
+    $repo: String!
+    $issueId: Int!
+    $perPage: Int!
+  ) {
+    repository(owner: $owner, name: $repo) {
+      issue(number: $issueId) {
+        comments(
+          last: $perPage
+        ) {
+          nodes {
+            id
+            reactionGroups {
+              users (first: 0) {
+                totalCount
+              }
+              content
+            }
+          }
+        }
+      }
+    }
+  }`;
+}
+
 export const GithubCommentApiQuery = {
   get: getCommentsQuery,
   create: createCommentQuery,
   editor: editorCommentQuery,
   delete: deleteCommentQuery,
   reaction: reactionComment,
+  getReactions: getReactionsComment,
 };

@@ -25,9 +25,13 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
 
   async function reactionComment(
     commentId: string,
-    content: GithubCommentReaction
+    content: GithubCommentReactionType
   ) {
     githubComment.reactionComment(commentId, content);
+  }
+
+  async function getReactionsComment() {
+    // githubComment.getCommentReactions(co)
   }
 
   return {
@@ -35,5 +39,6 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     initComments,
     postComment,
     reactionComment,
+    getReactionsComment,
   };
 });

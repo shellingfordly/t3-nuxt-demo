@@ -14,7 +14,10 @@ defineProps<{ comment: GithubCommentItem }>();
       <div p4>
         <div class="markdown-body" v-html="comment.bodyHTML"></div>
       </div>
-      <CommentReaction :commentId="comment.id" />
+      <CommentReaction
+        :commentId="comment.id"
+        :reactionGroups="comment.reactionGroups"
+      />
     </div>
   </div>
 </template>

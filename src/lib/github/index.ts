@@ -1,9 +1,11 @@
+import dayjs from "dayjs";
 import {
   deleteCommentQuery,
   getCommentsQuery,
   createCommentQuery,
   editorCommentQuery,
   reactionComment,
+  getReactionsComment,
 } from "./query";
 
 export class GithubComment {
@@ -21,6 +23,7 @@ export class GithubComment {
     editor: editorCommentQuery(),
     delete: deleteCommentQuery(),
     reaction: reactionComment(),
+    getReactions: getReactionsComment(),
   };
 
   private fetch(api: string) {
@@ -50,12 +53,17 @@ export class GithubComment {
         owner: "shellingfordly",
         repo: "vue-comment",
         issueId: 1,
-        perPage: 10,
+        perPage: 100,
       },
       query: this.apiQueryMap.get,
     });
 
-    return result.data.repository.issue.comments.nodes;
+    const data = result.data.repository.issue.comments
+      .nodes as GithubCommentItem[];
+
+    return data.sort(
+      (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
+    );
   }
 
   async createComment(content: string, id: string) {
@@ -93,13 +101,25 @@ export class GithubComment {
   /**
    * reaction: ❤️ 👍 👎
    */
-  async reactionComment(commentId: string, content: GithubCommentReaction) {
+  async reactionComment(commentId: string, content: GithubCommentReactionType) {
     return this.fetch("graphql").post({
       variables: {
         commentId,
         content,
       },
       query: this.apiQueryMap.reaction,
+    });
+  }
+
+  async getCommentReactions(issueId: string) {
+    this.fetch("graphql").post({
+      variables: {
+        owner: "shellingfordly",
+        repo: "vue-comment",
+        issueId,
+        perPage: 100,
+      },
+      query: this.apiQueryMap.getReactions,
     });
   }
 }

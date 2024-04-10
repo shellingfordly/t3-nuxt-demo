@@ -12,6 +12,7 @@
     "@unocss/reset": "^0.59.0",
     "@vssue/api-gitlab-v4": "^1.4.7",
     "@vueuse/core": "^10.9.0",
+    "dayjs": "^1.11.10",
     "octokit": "^3.2.0",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
