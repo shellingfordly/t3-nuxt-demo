@@ -23,9 +23,17 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     return true;
   }
 
+  async function reactionComment(
+    commentId: string,
+    content: GithubCommentReaction
+  ) {
+    githubComment.reactionComment(commentId, content);
+  }
+
   return {
     comments,
     initComments,
     postComment,
+    reactionComment,
   };
 });

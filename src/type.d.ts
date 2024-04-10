@@ -12,4 +12,12 @@ interface GithubCommentItem {
   author: GithubUserItem;
 }
 
-type GithubCommentReaction = "THUMBS_UP" | "THUMBS_DOWN" | "HEART";
+type GithubCommentReaction =
+  | "THUMBS_UP"
+  | "THUMBS_DOWN"
+  | "HEART"
+  | "EYES"
+  | "LAUGH"
+  | "HOORAY"
+  | "CONFUSED"
+  | "ROCKET";

@@ -18,6 +18,7 @@ export default defineConfig({
       "icon-btn",
       "inline-block cursor-pointer select-none opacity-75 transition duration-200 ease-in-out hover:opacity-100 hover:text-teal-600",
     ],
+    ["b-default", `b-1 b-rounded b-gray-200 dark:b-gray-700`],
     [
       /^flex-(\w+)-(\w+)/,
       ([_, col, row]) => `flex items-${col} justify-${row}`,
