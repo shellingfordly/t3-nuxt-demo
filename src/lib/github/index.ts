@@ -33,8 +33,7 @@ export async function postCommentApi(content: string, id: string) {
     }
   ).post({
     variables: {
-      // postComment needs issue NodeId, so we store it internally
-      issueNodeId: "I_kwDOLrNqr86FF056",
+      issueNodeId: id,
       content,
     },
     query: PostCommentQuery(),
@@ -42,5 +41,13 @@ export async function postCommentApi(content: string, id: string) {
 
   const result = JSON.parse(data.value as string);
 
-  return result;
+  if (result.errors && result.errors.length > 0) {
+    const error = result.errors[0];
+
+    alert(error.message);
+  }
+
+  console.log(result);
+
+  return result.data;
 }

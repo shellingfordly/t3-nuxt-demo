@@ -1,6 +1,12 @@
+<script setup lang="ts">
+const isDark = useDark();
+</script>
+
 <template>
-  <div flex flex-col items-center justify-center w-100 ma>
-    <HelloWorld />
+  <div p10>
+    <button mb5 btn @click="isDark = !isDark">change theme</button>
+
+    <CommentEditor />
     <CommentList />
   </div>
 </template>

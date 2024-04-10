@@ -18,16 +18,11 @@ function onCreateIssue() {
 }
 
 function onCreateComment() {
-  useFetch(
-    "https://api.github.com/repos/shellingfordly/vue-comment/issues/1/comments",
-    {
-      headers: {
-        Authorization: "token " + import.meta.env.VITE_GITHUB_TOKEN,
-      },
-    }
-  ).post({
-    body: "test",
-  });
+  useFetch("https://api.github.com/repos/shellingfordly/vue-comment/issues", {
+    headers: {
+      Authorization: "token " + import.meta.env.VITE_GITHUB_TOKEN,
+    },
+  }).get();
 }
 </script>
 
@@ -35,8 +30,8 @@ function onCreateComment() {
   <SignInButton v-if="!user.isSignedIn" />
   <UserButton v-else />
 
-  <button @click="onCreateIssue">create issue</button>
-  <button @click="onCreateComment">create comment</button>
+  <button mt5 mb5 btn @click="onCreateIssue">create issue</button>
+  <button mb5 btn @click="onCreateComment">create comment</button>
 </template>
 
 <style scoped>

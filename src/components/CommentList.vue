@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const { comments } = useComments();
+const { comments, initComments } = useComments();
+
+onMounted(initComments);
 </script>
 <template>
   <div>

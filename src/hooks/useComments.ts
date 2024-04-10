@@ -3,19 +3,13 @@ import { getCommentsApi, postCommentApi } from "../lib/github";
 export function useComments() {
   const comments = ref<GithubCommentItem[]>([]);
 
-  onMounted(init);
-
-  async function init() {
+  async function initComments() {
     const data = await getCommentsApi();
     comments.value = data;
   }
 
-  async function postComment(id: string) {
-    await postCommentApi(
-      `> test comment 
-        \n 1111`,
-      id
-    );
+  async function postComment(content: string, id: string) {
+    await postCommentApi(content, id);
   }
 
   async function reaction(content: "-1" | "+1" | "heart") {
@@ -39,6 +33,7 @@ export function useComments() {
 
   return {
     comments,
+    initComments,
     postComment,
   };
 }
