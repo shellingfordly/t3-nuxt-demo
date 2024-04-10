@@ -1,9 +1,28 @@
-# Vue 3 + TypeScript + Vite
+# Vue Comment
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+[WIP]
 
-## Recommended Setup
+This is a issue-based vue-comment component. It‘s inspiration comes in [vssue](https://github.com/meteorlxy/vssue).
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
+It's incomplete now. If you config yourself github_token, and create first issue, you can view all comments and add comment of the issue.
 
-- Use [vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) for performing the same type checking from the command line, or for generating d.ts files for SFCs.
+The other person can sign in github. But he/she can't add comment by himself/herself, because comment-action based github_token of config.
+
+## TodoList
+
+Maybe it will realize similar functions to **vssue** in the future.
+
+- [ ] get user auth
+- [ ] add comment by user
+- [ ] cancel reaction comment
+- [x] reaction comment
+- [x] show issue all comments
+- [x] add comment only by oneself
+
+## Contributing
+
+📜 Feel free to open issues following the issue templates if you have any problems or ideas.
+
+❤️ Contributions welcome very much!
+
+![preview](./docs/img/preview.png)
