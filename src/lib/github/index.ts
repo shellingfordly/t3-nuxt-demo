@@ -1,53 +1,82 @@
-import { GetCommentsQuery, PostCommentQuery } from "./constants";
+import { getCommentsQuery, postCommentQuery } from "./query";
 
-export async function getCommentsApi() {
-  const { data } = await useFetch(`https://api.github.com/graphql`, {
-    headers: {
-      Authorization: "token " + import.meta.env.VITE_GITHUB_TOKEN,
-      Accept: "application/vnd.github.v3+json",
-    },
-  }).post({
-    variables: {
-      owner: "shellingfordly",
-      repo: "vue-comment",
-      issueId: 1,
-      perPage: 10,
-    },
-    query: GetCommentsQuery(),
-  });
+export class GithubComment {
+  private BaseUrl = "https://api.github.com/";
+  //I_kwDOLrNqr86FF056
+  private issueNodeId = "";
 
-  const result = JSON.parse(data.value as string);
+  constructor(_issueNodeId?: string) {
+    if (_issueNodeId) this.issueNodeId = _issueNodeId;
+  }
 
-  return result.data.repository.issue.comments.nodes;
-}
+  private queryMap = {
+    get: getCommentsQuery(),
+    post: postCommentQuery(),
+  };
 
-export async function postCommentApi(content: string, id: string) {
-  const { data } = await useFetch(
-    `https://api.github.com/graphql`,
+  private fetch(api: string) {
+    const url = this.BaseUrl + api;
 
-    {
+    const fetch = useFetch(url, {
       headers: {
         Authorization: "token " + import.meta.env.VITE_GITHUB_TOKEN,
         Accept: "application/vnd.github.v3+json",
       },
-    }
-  ).post({
-    variables: {
-      issueNodeId: id,
-      content,
-    },
-    query: PostCommentQuery(),
-  });
+    });
 
-  const result = JSON.parse(data.value as string);
-
-  if (result.errors && result.errors.length > 0) {
-    const error = result.errors[0];
-
-    alert(error.message);
+    return {
+      post: async (params: any) => {
+        const result = await fetch.post(params);
+        return JSON.parse(result.data.value as string);
+      },
+      get: fetch.get,
+      delete: fetch.delete,
+      patch: fetch.patch,
+    };
   }
 
-  console.log(result);
+  async getComments() {
+    const result = await this.fetch("graphql").post({
+      variables: {
+        owner: "shellingfordly",
+        repo: "vue-comment",
+        issueId: 1,
+        perPage: 10,
+      },
+      query: this.queryMap.get,
+    });
 
-  return result.data;
+    return result.data.repository.issue.comments.nodes;
+  }
+
+  postComments(content: string, id: string) {
+    const issueNodeId = this.issueNodeId || id;
+
+    return this.fetch("graphql").post({
+      variables: {
+        issueNodeId,
+        content,
+      },
+      query: this.queryMap.post,
+    });
+  }
+
+  // async function reaction(content: "-1" | "+1" | "heart") {
+  //   const { data } = await useFetch(
+  //     "https://api.github.com/repos/meteorlxy/vssue/issues/comments/2044452619/reactions",
+  //     {
+  //       headers: {
+  //         Authorization: "token " + import.meta.env.VITE_GITHUB_TOKEN,
+  //       },
+  //     }
+  //   ).post({
+  //     content,
+  //   });
+  //   console.log("reaction - %s - %s", content, data);
+  // }
+
+  // function editor() {
+  //   // patch https://api.github.com/repos/meteorlxy/vssue/issues/comments/2044452619
+  //   // delete https://api.github.com/repos/meteorlxy/vssue/issues/comments/2044452619
+  // }
 }

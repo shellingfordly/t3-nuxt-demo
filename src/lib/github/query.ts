@@ -1,4 +1,4 @@
-export function GetCommentsQuery() {
+export function getCommentsQuery() {
   return `\
   query getComments(
   $owner: String!
@@ -40,7 +40,7 @@ export function GetCommentsQuery() {
   }`;
 }
 
-export function PostCommentQuery() {
+export function postCommentQuery() {
   return `\
   mutation postComment(
   $issueNodeId: ID!

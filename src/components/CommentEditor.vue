@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { SignInButton, UserButton, useUser } from "vue-clerk";
+import { useGithubCommentStore } from "../stores/githubComment";
 
 const user = useUser();
 const content = ref("");
-const { postComment } = useComments();
+const githubCommentStore = useGithubCommentStore();
 
-function onPostComment() {
-  postComment(content.value, "");
+async function onPostComment() {
+  const success = await githubCommentStore.postComment(content.value, "");
+  if (success) {
+    githubCommentStore.initComments();
+  }
 }
 </script>
 <template>
