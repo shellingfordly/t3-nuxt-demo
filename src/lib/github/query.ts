@@ -1,4 +1,19 @@
-export function getCommentsQuery() {
+export function getCommentsQuery({
+  endCursor = "",
+  startCursor = "",
+  sort = "last",
+}: Partial<GithubCommentPageInfo>) {
+  let beforeOrAfter: "before" | "after";
+  let offset = "";
+
+  if (sort === "first") {
+    beforeOrAfter = "after";
+    offset = endCursor ? `after: "${endCursor}"` : "";
+  } else if (sort === "last") {
+    beforeOrAfter = "before";
+    offset = startCursor ? `before: "${startCursor}"` : "";
+  }
+
   return `\
   query getComments(
   $owner: String!
@@ -9,7 +24,8 @@ export function getCommentsQuery() {
   repository(owner: $owner, name: $repo) {
   issue(number: $issueId) {
     comments(
-      last: $perPage
+      ${sort}: $perPage
+      ${offset}
     ) {
       totalCount
       pageInfo {

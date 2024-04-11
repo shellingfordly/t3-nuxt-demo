@@ -20,6 +20,7 @@ export default defineConfig({
       "inline-block cursor-pointer select-none opacity-75 transition duration-200 ease-in-out hover:opacity-100 hover:text-teal-600",
     ],
     ["b-default", `b-1 b-rounded b-gray-200 dark:b-gray-700`],
+    [/b-(\w+)-default/, ([_, p]) => `b-${p}-1 b-gray-200 dark:b-gray-700`],
     [
       /a-(\w+)/,
       ([_, color]) =>

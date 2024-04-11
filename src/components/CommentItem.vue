@@ -40,7 +40,7 @@ function onGoGithubUserPage() {
 
 <style scoped>
 .comment {
-  --at-apply: relative w-150 b-default;
+  --at-apply: flex-1 relative w-150 b-default;
 
   &::before {
   --at-apply: bg-gray-200 dark:bg-gray-700;

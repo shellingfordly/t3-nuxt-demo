@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { useGithubCommentStore } from "../stores/githubComment";
+
 const githubCommentStore = useGithubCommentStore();
 
-onMounted(githubCommentStore.getComments);
+onMounted(githubCommentStore.updateComments);
 </script>
 <template>
-  <div>
-    <ul>
-      <li v-for="comment in githubCommentStore.comments">
-        <CommentItem :comment="comment" :key="comment.id" />
-      </li>
-    </ul>
-  </div>
+  <template v-for="comment in githubCommentStore.comments" :key="comment.id">
+    <CommentItem :comment="comment" />
+  </template>
 </template>
 <style scoped></style>

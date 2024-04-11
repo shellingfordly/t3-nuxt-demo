@@ -32,7 +32,6 @@ export class GithubComment {
   }
 
   private apiQueryMap = {
-    get: getCommentsQuery(),
     post: createCommentQuery(),
     editor: editorCommentQuery(),
     delete: deleteCommentQuery(),
@@ -139,23 +138,18 @@ export class GithubComment {
    *
    * @see https://developer.github.com/v4/object/issuecommentconnection/
    */
-  async getComments() {
-    const result = await this.fetch("https://api.github.com/graphql").post({
+  async getComments(pageInfo: Partial<GithubCommentPageInfo>) {
+    const { data } = await this.fetch("https://api.github.com/graphql").post({
       variables: {
         owner: "shellingfordly",
         repo: "vue-comment",
         issueId: 1,
-        perPage: 100,
+        perPage: 10,
       },
-      query: this.apiQueryMap.get,
+      query: getCommentsQuery(pageInfo),
     });
 
-    const data = result.data.repository.issue.comments
-      .nodes as GithubCommentItem[];
-
-    return data.sort(
-      (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
-    );
+    return data.repository.issue.comments as GithubCommentResult;
   }
 
   /**

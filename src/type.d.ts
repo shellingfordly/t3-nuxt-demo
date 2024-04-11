@@ -17,6 +17,17 @@ interface GithubCommentItem {
   reactionGroups: GithubCommentReactionGroup[];
 }
 
+interface GithubCommentPageInfo {
+  endCursor: string;
+  startCursor: string;
+  sort: "last" | "first";
+}
+interface GithubCommentResult {
+  nodes: GithubCommentItem[];
+  pageInfo: GithubCommentPageInfo;
+  totalCount: number;
+}
+
 type GithubCommentReactionType =
   | "THUMBS_UP"
   | "THUMBS_DOWN"
