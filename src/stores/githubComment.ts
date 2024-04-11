@@ -15,10 +15,14 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   watch(
     _githubCode,
     async (code) => {
-      if (code) _githubComment.getAccessToken(code);
+      if (code) {
+        await _githubComment.getAccessToken(code);
+      }
     },
     { immediate: true }
   );
+
+  _githubComment.init({ issueId: 1 });
 
   // login github authorize
   function loginAuthorize() {
@@ -31,14 +35,25 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     );
   }
 
+  function setPageInfo(result: GithubCommentResult) {
+    pageInfo.endCursor = result.pageInfo.endCursor;
+    pageInfo.startCursor = result.pageInfo.startCursor;
+    commentTotalCount.value = result.totalCount;
+  }
+
+  async function initComments() {
+    const result = await _githubComment.getComments({ sort: "last" });
+    comments.value = sortComments(result.nodes);
+
+    setPageInfo(result);
+  }
+
   async function updateComments() {
     const result = await _githubComment.getComments(pageInfo);
     const newComments = sortComments(result.nodes);
     comments.value = [...comments.value, ...newComments];
 
-    pageInfo.endCursor = result.pageInfo.endCursor;
-    pageInfo.startCursor = result.pageInfo.startCursor;
-    commentTotalCount.value = result.totalCount;
+    setPageInfo(result);
   }
 
   async function createComment(content: string, id: string) {
@@ -72,6 +87,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     comments,
     commentContent,
     commentTotalCount,
+    initComments,
     updateComments,
     createComment,
     reactionComment,

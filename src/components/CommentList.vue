@@ -3,7 +3,7 @@ import { useGithubCommentStore } from "../stores/githubComment";
 
 const githubCommentStore = useGithubCommentStore();
 
-onMounted(githubCommentStore.updateComments);
+onMounted(githubCommentStore.initComments);
 </script>
 <template>
   <template v-for="comment in githubCommentStore.comments" :key="comment.id">

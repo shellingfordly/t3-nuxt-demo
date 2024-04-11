@@ -7,6 +7,7 @@ import {
   reactionComment,
   getReactionsComment,
   getUserQuery,
+  getIssueQuery,
 } from "./query";
 import { getEnv } from "../utils/env";
 import { formatUrl } from "../utils/url";
@@ -15,16 +16,15 @@ const GITHUB_ACCESS_TOKEN = useLocalStorage("GITHUB_ACCESS_TOKEN", "");
 
 export class GithubComment {
   //I_kwDOLrNqr86FF056
-  private issueNodeId = "";
+  private issueNodeId: string = "";
+  private issueId: number = 0;
   private clientId: string;
   private clientSecret: string;
   get githubToken() {
     return GITHUB_ACCESS_TOKEN.value;
   }
 
-  constructor(_issueNodeId?: string) {
-    if (_issueNodeId) this.issueNodeId = _issueNodeId;
-
+  constructor() {
     const env = getEnv();
 
     this.clientId = env.clientId;
@@ -66,7 +66,12 @@ export class GithubComment {
     return String(dayjs().valueOf() + ran);
   }
 
-  public setConfig({ code }: { code: string }) {}
+  public init({ issueId }: { issueId: number; issueNodeId?: string }) {
+    // this.issueId = issueId;
+    // this.issueNodeId = issueNodeId;
+
+    this.getIssue(issueId);
+  }
 
   /**
    * Redirect to the authorization page of platform.
@@ -131,6 +136,18 @@ export class GithubComment {
     });
 
     return data.viewer as GithubUserItem;
+  }
+
+  async getIssue(issueId: number) {
+    const { data } = await this.fetch("https://api.github.com/graphql").post({
+      query: getIssueQuery({
+        owner: "shellingfordly",
+        repo: "vue-comment",
+        issueId,
+      }),
+    });
+
+    this.issueNodeId = data.repository.issue.id;
   }
 
   /**

@@ -14,7 +14,7 @@ async function onCreateComment() {
   createLoading.value = true;
   const success = await githubCommentStore.createComment(content.value, "");
   if (success) {
-    await githubCommentStore.updateComments();
+    await githubCommentStore.initComments();
   }
   content.value = "";
   createLoading.value = false;

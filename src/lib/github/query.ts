@@ -1,3 +1,26 @@
+export function getIssueQuery({
+  owner,
+  repo,
+  issueId,
+}: {
+  owner: string;
+  repo: string;
+  issueId: number;
+}) {
+  return `\
+    query getIssueById {
+      repository(owner: "${owner}", name: "${repo}") {
+        issue (number: ${issueId}) {
+          id
+          number
+          title
+          body
+          url
+        }
+      }
+    }`;
+}
+
 export function getCommentsQuery({
   endCursor = "",
   startCursor = "",
@@ -59,36 +82,36 @@ export function getCommentsQuery({
 export function createCommentQuery() {
   return `\
   mutation postComment(
-  $issueNodeId: ID!
-  $content: String!
+    $issueNodeId: ID!
+    $content: String!
   ) {
-  addComment(
-  input: {
-    subjectId: $issueNodeId
-    body: $content
-  }
-  ) {
-  commentEdge {
-    node {
-      id
-      body
-      bodyHTML
-      createdAt
-      updatedAt
-      author {
-        avatarUrl
-        login
-        url
+    addComment(
+      input: {
+        subjectId: $issueNodeId
+        body: $content
       }
-      reactionGroups {
-        users (first: 0) {
-          totalCount
+    ) {
+      commentEdge {
+        node {
+          id
+          body
+          bodyHTML
+          createdAt
+          updatedAt
+          author {
+            avatarUrl
+            login
+            url
+          }
+          reactionGroups {
+            users (first: 0) {
+              totalCount
+            }
+            content
+          }
         }
-        content
       }
     }
-  }
-  }
   }`;
 }
 
