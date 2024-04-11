@@ -3,11 +3,16 @@ import { useGithubCommentStore } from "./stores/githubComment";
 
 const isDark = useDark();
 const githubCommentStore = useGithubCommentStore();
+const showMore = computed(
+  () =>
+    githubCommentStore.comments.length > 0 &&
+    githubCommentStore.comments.length < githubCommentStore.commentTotalCount
+);
 </script>
 
 <template>
   <!-- <HelloWorld /> -->
-  <div container ma>
+  <div container ma pb10>
     <div p5 space-x-4>
       <span
         class="hc-gray i-material-symbols:light-mode dark:i-material-symbols:dark-mode"
@@ -47,5 +52,11 @@ const githubCommentStore = useGithubCommentStore();
     </div>
     <CommentEditor />
     <CommentList />
+    <div v-if="showMore" flex-center-center p5>
+      <button p2 c-gray a-blue @click="githubCommentStore.updateComments">
+        <span>VIEW MORE</span>
+        <span i-material-symbols:keyboard-arrow-down />
+      </button>
+    </div>
   </div>
 </template>

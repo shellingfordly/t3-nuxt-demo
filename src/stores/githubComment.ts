@@ -10,7 +10,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   const comments = ref<GithubCommentItem[]>([]);
   const pageInfo = reactive<Partial<GithubCommentPageInfo>>({});
   const commentContent = ref("");
-  const commentTotalCount = ref(0);
+  const commentTotalCount = ref(Infinity);
 
   watch(
     _githubCode,
