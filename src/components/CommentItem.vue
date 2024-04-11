@@ -1,15 +1,31 @@
 <script setup lang="ts">
-defineProps<{ comment: GithubCommentItem }>();
+const props = defineProps<{ comment: GithubCommentItem }>();
+
+const router = useRouter();
+
+function onGoGithubUserPage() {
+  router.push(props.comment.author.url);
+}
 </script>
 
 <template>
   <div flex mb5>
-    <img class="mr-5 w-10 h-10 rd-10" :src="comment.author.avatarUrl" alt="" />
+    <img
+      class="cp mr-5 w-10 h-10 rd-10"
+      :src="comment.author.avatarUrl"
+      :alt="comment.author.login"
+      @click="onGoGithubUserPage"
+    />
 
-    <div class="box relative w-150 b-default">
-      <div class="p2 b-b-1 b-gray-200 dark:b-gray-700">
-        <span mr-2>{{ comment.author.login }}</span>
-        <span font-size-3 c-gray> commented on Jan 13, 2019 </span>
+    <div class="comment">
+      <div flex-center-between p2 b-b-1 b-gray-200 dark:b-gray-700>
+        <div>
+          <span a-blue mr-2 @click="onGoGithubUserPage">
+            {{ comment.author.login }}
+          </span>
+          <span font-size-3 c-gray> commented on Jan 13, 2019 </span>
+        </div>
+        <CommentAction />
       </div>
       <div p4>
         <div class="markdown-body" v-html="comment.bodyHTML"></div>
@@ -23,7 +39,24 @@ defineProps<{ comment: GithubCommentItem }>();
 </template>
 
 <style scoped>
-.box::after {
+.comment {
+  --at-apply: relative w-150 b-default;
+
+  &::before {
+  --at-apply: bg-gray-200 dark:bg-gray-700;
+  display: block;
+  position: absolute;
+  top: 12.5px;
+  right: 100%;
+  left: -9px;
+  width: 8px;
+  height: 16px;
+  pointer-events: none;
+  content: " ";
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+}
+
+  &::after {
   --at-apply: bg-white dark:bg-black;
   position: absolute;
   top: 12.5px;
@@ -38,17 +71,6 @@ defineProps<{ comment: GithubCommentItem }>();
   margin-left: 1px;
 }
 
-.box::before {
-  --at-apply: bg-gray-200 dark:bg-gray-700;
-  display: block;
-  position: absolute;
-  top: 12.5px;
-  right: 100%;
-  left: -9px;
-  width: 8px;
-  height: 16px;
-  pointer-events: none;
-  content: " ";
-  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+
 }
 </style>

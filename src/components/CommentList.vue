@@ -2,7 +2,7 @@
 import { useGithubCommentStore } from "../stores/githubComment";
 const githubCommentStore = useGithubCommentStore();
 
-onMounted(githubCommentStore.initComments);
+onMounted(githubCommentStore.getComments);
 </script>
 <template>
   <div>
