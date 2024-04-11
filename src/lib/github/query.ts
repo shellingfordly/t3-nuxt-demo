@@ -166,6 +166,17 @@ export function getReactionsComment() {
   }`;
 }
 
+export function getUserQuery() {
+  return `\
+  query getUser {
+    viewer {
+      login
+      avatarUrl
+      url
+    }
+  }`;
+}
+
 export const GithubCommentApiQuery = {
   get: getCommentsQuery,
   create: createCommentQuery,

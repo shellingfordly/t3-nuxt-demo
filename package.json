@@ -12,13 +12,18 @@
     "@unocss/reset": "^0.59.0",
     "@vssue/api-gitlab-v4": "^1.4.7",
     "@vueuse/core": "^10.9.0",
+    "@vueuse/router": "^10.9.0",
     "dayjs": "^1.11.10",
     "octokit": "^3.2.0",
     "pinia": "^2.1.7",
+    "qs": "^6.12.0",
     "vue": "^3.4.21",
-    "vue-clerk": "^0.2.1"
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@iconify-json/material-symbols": "^1.1.77",
+    "@iconify-json/mdi": "^1.1.66",
+    "@types/qs": "^6.9.14",
     "@vitejs/plugin-vue": "^5.0.4",
     "typescript": "^5.2.2",
     "unocss": "^0.59.0",

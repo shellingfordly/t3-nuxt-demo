@@ -3,14 +3,17 @@ import "./styles/index.css";
 import "uno.css";
 import { createApp } from "vue";
 import App from "./App.vue";
-import { clerkPlugin } from "vue-clerk/plugin";
 import { createPinia } from "pinia";
+import { createRouter, createWebHistory } from "vue-router";
 
 const app = createApp(App);
 const pinia = createPinia();
 
-app.use(pinia);
-app.use(clerkPlugin, {
-  publishableKey: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [],
 });
+
+app.use(router);
+app.use(pinia);
 app.mount("#app");
