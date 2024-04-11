@@ -17,7 +17,7 @@ const GITHUB_ACCESS_TOKEN = useLocalStorage("GITHUB_ACCESS_TOKEN", "");
 export class GithubComment {
   //I_kwDOLrNqr86FF056
   private issueNodeId: string = "";
-  private issueId: number = 0;
+  // private issueId: number = 0;
   private clientId: string;
   private clientSecret: string;
   get githubToken() {

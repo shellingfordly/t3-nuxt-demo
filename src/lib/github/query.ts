@@ -26,14 +26,11 @@ export function getCommentsQuery({
   startCursor = "",
   sort = "last",
 }: Partial<GithubCommentPageInfo>) {
-  let beforeOrAfter: "before" | "after";
   let offset = "";
 
   if (sort === "first") {
-    beforeOrAfter = "after";
     offset = endCursor ? `after: "${endCursor}"` : "";
   } else if (sort === "last") {
-    beforeOrAfter = "before";
     offset = startCursor ? `before: "${startCursor}"` : "";
   }
 
