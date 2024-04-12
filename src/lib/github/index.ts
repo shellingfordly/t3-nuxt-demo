@@ -22,7 +22,7 @@ export class GithubComment {
     return GITHUB_ACCESS_TOKEN.value;
   }
 
-  initConfig(config: GithubConfig) {
+  constructor(config: GithubConfig) {
     this.author = config.author;
     this.repo = config.repo;
     this.clientId = config.clientId;

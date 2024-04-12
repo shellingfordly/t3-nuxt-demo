@@ -5,8 +5,14 @@ import dayjs from "dayjs";
 import { getEnv } from "../lib/utils/env";
 
 export const useGithubCommentStore = defineStore("githubCommentStore", () => {
+  const { clientId, clientSecret, githubAuthor, githubRepo } = getEnv();
   const _githubCode = useRouteQuery("code", "");
-  const _githubComment = reactive(new GithubComment());
+  const _githubComment = reactive(new GithubComment({
+    clientId,
+    clientSecret,
+    repo: githubRepo,
+    author: githubAuthor
+  }));
 
   const comments = ref<GithubCommentItem[]>([]);
   const pageInfo = reactive<Partial<GithubCommentPageInfo>>({});
@@ -27,22 +33,13 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     { immediate: true }
   );
 
-  watch(isAuthed, init, { immediate: true });
-
-  async function init() {
+  watch(isAuthed, async () => {
     if (isAuthed.value) {
-      const { clientId, clientSecret, githubAuthor, githubRepo } = getEnv();
-      _githubComment.initConfig({
-        clientId,
-        clientSecret,
-        repo: githubRepo,
-        author: githubAuthor
-      });
       await _githubComment.getIssue(1);
       getUserInfo();
       initComments();
     }
-  }
+  }, { immediate: true });
 
   // login github authorize
   function loginAuthorize() {
