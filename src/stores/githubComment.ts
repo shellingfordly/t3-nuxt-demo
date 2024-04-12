@@ -16,11 +16,12 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
 
   const comments = ref<GithubCommentItem[]>([]);
   const pageInfo = reactive<Partial<GithubCommentPageInfo>>({});
-  const commentContent = ref("");
   const commentTotalCount = ref(Infinity);
   const userInfo = ref<Partial<GithubUserItem>>({});
   const isAuthed = computed(() => _githubComment.isAuthed);
   const router = useRouter();
+  const quoteComment = ref<Partial<GithubCommentItem>>({})
+
 
   watch(
     _githubCode,
@@ -78,9 +79,15 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   }
 
   async function createComment(content: string, id: string) {
-    if (!isAuthed.value) return;
+    if (!isAuthed.value || !content) return;
 
-    const result = await _githubComment.createComment(content, id);
+    let value = content
+    if (quoteComment.value.id) {
+      const quoteBody = "@" + quoteComment.value.author?.login + "\n" + quoteComment.value.body?.split("\n").map(str => `> ${str}`).join("\n");
+      value = quoteBody + "\n\n" + content;
+    }
+
+    const result = await _githubComment.createComment(value, id);
     if (result.errors && result.errors.length > 0) {
       const error = result.errors[0];
 
@@ -136,8 +143,6 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     }
   }
 
-  const quoteComment = ref<Partial<GithubCommentItem>>({})
-  const quoteCommentContent = computed(() => quoteComment.value?.bodyHTML || "")
   function onQuoteComment(comment: GithubCommentItem) {
     quoteComment.value = comment
   }
@@ -149,7 +154,6 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
 
   return {
     comments,
-    commentContent,
     commentTotalCount,
     userInfo,
     isAuthed,
@@ -164,7 +168,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     editorComment,
     logout,
 
-    quoteCommentContent,
+    quoteComment,
     onUpdateComment,
     onQuoteComment
   };

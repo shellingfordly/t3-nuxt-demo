@@ -12,7 +12,7 @@ const createLoading = ref(false);
 const content = ref("");
 const editorRef = ref<HTMLTextAreaElement | null>(null)
 const isFocus = ref(false);
-const btnDisabled = computed<boolean>(()=>createLoading.value || !content.value || !githubCommentStore.isAuthed)
+const btnDisabled = computed<boolean>(()=>createLoading.value || !content.value.trim() || !githubCommentStore.isAuthed)
 
 useEventListener(
   "click",
@@ -24,8 +24,8 @@ useEventListener(
   false
 );
 
-watch(() => githubCommentStore.quoteCommentContent, (content) => {
-  if (content) onFocus()
+watch(() => githubCommentStore.quoteComment, (comment) => {
+  if (comment && comment.id) onFocus()
 }, { immediate: true })
 
 watchEffect(() => {
@@ -47,6 +47,7 @@ async function createComment() {
     await githubCommentStore.initComments();
   }
   content.value = "";
+  githubCommentStore.quoteComment = {};
 }
 
 async function updateComment() {
@@ -71,19 +72,19 @@ async function onEditComment() {
 </script>
 <template>
   <div
-    class="w-full h-30 box-border p2 b-default rounded resize-none"
+    class="flex flex-col w-full box-border p2 b-default rounded resize-none"
     :class="isFocus && 'b-2 b-blue dark:b-blue-800'"
     @click="onFocus"
   >
     <div
-      v-if="githubCommentStore.quoteCommentContent"
+      v-if="githubCommentStore.quoteComment.id"
       class="markdown-body mb2 bg-gray-100! p2 rounded"
-      v-html="githubCommentStore.quoteCommentContent"
+      v-html="githubCommentStore.quoteComment.bodyHTML"
     />
     <textarea
       ref="editorRef"
       v-model="content"
-      class="box-border w-full h-full resize-none b-0 outline-0"
+      class="box-border w-full min-h-20 resize-none b-0 outline-0"
       @focus="isFocus = true"
     />
   </div>

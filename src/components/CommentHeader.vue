@@ -57,7 +57,11 @@ function onLogout() {
             aria-labelledby="avatarButton"
           >
             <li>
-              <a :href="user.url" class="block px-4 py-2 hbg-gray">
+              <a
+                :href="user.url"
+                class="block px-4 py-2 hbg-gray"
+                target="_blank"
+              >
                 Github
               </a>
             </li>
@@ -66,7 +70,7 @@ function onLogout() {
           <div class="py-1">
             <a
               href="#"
-              class="block px-4 py-2 text-sm text-gray-700 hbg-gray"
+              class="block px-4 py-2 text-sm hbg-gray"
               @click="onLogout"
             >
               Sign out

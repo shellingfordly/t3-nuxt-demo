@@ -1,11 +1,9 @@
 <script setup lang="ts">
 const props = defineProps<{ comment: GithubCommentItem }>();
-
-const router = useRouter();
 const isEditMode = ref(false);
 
 function onGoGithubUserPage() {
-  router.push(props.comment.author.url);
+  window.open(props.comment.author.url);
 }
 </script>
 
@@ -21,15 +19,19 @@ function onGoGithubUserPage() {
     <div class="comment">
       <div flex-center-between p2 b-b-1 b-gray-200 dark:b-gray-700>
         <div>
-          <span a-blue mr-2 @click="onGoGithubUserPage">
+          <a a-blue mr-2 :href="comment.author.url" target="_blank">
             {{ comment.author.login }}
-          </span>
+          </a>
           <span font-size-3 c-gray> commented on Jan 13, 2019 </span>
         </div>
         <CommentAction :comment="comment" @editor="isEditMode = true" />
       </div>
       <div p4>
-        <div v-if="!isEditMode" class="markdown-body" v-html="comment.bodyHTML"></div>
+        <div
+          v-if="!isEditMode"
+          class="markdown-body"
+          v-html="comment.bodyHTML"
+        ></div>
         <CommentEditor
           v-if="isEditMode"
           :comment-id="comment.id"
@@ -38,7 +40,10 @@ function onGoGithubUserPage() {
           @cancel="isEditMode = false"
         />
       </div>
-      <CommentReaction :commentId="comment.id" :reactionGroups="comment.reactionGroups" />
+      <CommentReaction
+        :commentId="comment.id"
+        :reactionGroups="comment.reactionGroups"
+      />
     </div>
   </div>
 </template>
