@@ -139,6 +139,12 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     }
   }
 
+  const quoteComment = ref<Partial<GithubCommentItem>>({})
+  const quoteCommentContent = computed(() => quoteComment.value?.bodyHTML || "")
+  function onQuoteComment(comment: GithubCommentItem) {
+    quoteComment.value = comment
+  }
+
   function logout() {
     _githubComment.logout();
     window.location.reload();
@@ -160,6 +166,9 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     deleteComment,
     editorComment,
     logout,
+
+    quoteCommentContent,
     onUpdateComment,
+    onQuoteComment
   };
 });

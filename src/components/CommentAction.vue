@@ -26,7 +26,9 @@ function onCopyLink() {
   navigator.clipboard.writeText(props.comment.url);
 }
 
-function onQuoteComment() { }
+function onQuoteComment() {
+  githubCommentStore.onQuoteComment(props.comment);
+}
 
 async function onDeleteComment() {
   if (!window.confirm("Confirm to delete this comment ?")) return;

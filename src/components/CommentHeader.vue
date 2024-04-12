@@ -65,6 +65,7 @@ function onLogout() {
 
     <div flex-1>
       <h4 font-size-4 font-500 mb3>Add a comment</h4>
+
       <CommentEditor />
     </div>
   </div>

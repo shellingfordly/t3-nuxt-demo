@@ -10,12 +10,35 @@ const isUpdateComment = computed(() => !!props.commentId);
 const githubCommentStore = useGithubCommentStore();
 const createLoading = ref(false);
 const content = ref("");
+const editorRef = ref<HTMLTextAreaElement | null>(null)
+const isFocus = ref(false);
+
+useEventListener(
+  "click",
+  () => {
+    const focus = document.activeElement == editorRef.value;
+    if(focus) onFocus()
+    else isFocus.value = false;
+  },
+  false
+);
+
+watch(() => githubCommentStore.quoteCommentContent, (content) => {
+  if (content) onFocus()
+}, { immediate: true })
 
 watchEffect(() => {
   if (props.commentBody) {
     content.value = props.commentBody;
   }
 });
+
+function onFocus() {
+  if (editorRef.value) {
+    editorRef.value.focus();
+    isFocus.value = true;
+  }
+}
 
 async function createComment() {
   const success = await githubCommentStore.createComment(content.value, "");
@@ -39,8 +62,6 @@ async function updateComment() {
 async function onEditComment() {
   createLoading.value = true;
 
-  console.log("edit");
-
   if (isUpdateComment.value) updateComment();
   else createComment();
 
@@ -48,14 +69,27 @@ async function onEditComment() {
 }
 </script>
 <template>
-  <div flex>
+  <div
+    class="w-full p2 b-1 rounded resize-none"
+    :class="isFocus && 'b-2 b-gray-800'"
+    @click="onFocus"
+  >
+    <div
+      v-if="githubCommentStore.quoteCommentContent"
+      class="markdown-body mb2 bg-gray-100! p2 rounded"
+      v-html="githubCommentStore.quoteCommentContent"
+    />
     <textarea
+      ref="editorRef"
       v-model="content"
-      class="w-full h-20 p2 box-border b-1 rounded resize-none fs4"
+      class="box-border w-full h-full resize-none b-0 outline-0"
+      @focus="isFocus = true"
     />
   </div>
   <div flex-center-end p2 space-x-2>
-    <button v-if="isUpdateComment" btn-red @click="$emit('cancel')">Cancel</button>
+    <button v-if="isUpdateComment" btn-red @click="$emit('cancel')">
+      Cancel
+    </button>
     <button btn :disabled="createLoading" @click="onEditComment">
       <span v-if="createLoading" i-line-md:loading-alt-loop />
       <span>{{ isUpdateComment ? "Update Comment" : "Comment" }}</span>
