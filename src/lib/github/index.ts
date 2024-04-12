@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import {
   deleteCommentQuery,
   getCommentsQuery,
@@ -60,17 +59,16 @@ export class GithubComment {
     };
   }
 
-  private createRandomState() {
-    const ran = Math.random();
-
-    return String(dayjs().valueOf() + ran);
+  get getToken() {
+    return GITHUB_ACCESS_TOKEN;
   }
 
-  public init({ issueId }: { issueId: number; issueNodeId?: string }) {
-    // this.issueId = issueId;
-    // this.issueNodeId = issueNodeId;
+  get isAuthed() {
+    return !!GITHUB_ACCESS_TOKEN.value;
+  }
 
-    this.getIssue(issueId);
+  logout() {
+    GITHUB_ACCESS_TOKEN.value = "";
   }
 
   /**
@@ -85,7 +83,7 @@ export class GithubComment {
       client_id: this.clientId,
       redirect_uri: window.location.href,
       scope: "public_repo",
-      state: this.createRandomState(),
+      state: "vue-comment",
     });
   }
 

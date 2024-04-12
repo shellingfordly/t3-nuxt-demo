@@ -3,12 +3,8 @@ import { useGithubCommentStore } from "../stores/githubComment";
 
 const content = ref("");
 const githubCommentStore = useGithubCommentStore();
-const user = ref<Partial<GithubUserItem>>({});
+const user = computed(() => githubCommentStore.userInfo);
 const createLoading = ref(false);
-
-onMounted(async () => {
-  user.value = await githubCommentStore.getUserInfo();
-});
 
 async function onCreateComment() {
   createLoading.value = true;
@@ -22,6 +18,10 @@ async function onCreateComment() {
 
 function onLogin() {
   githubCommentStore.loginAuthorize();
+}
+
+function onLogout() {
+  githubCommentStore.logout();
 }
 </script>
 <template>
@@ -44,7 +44,15 @@ function onLogin() {
       />
     </div>
   </div>
-  <div flex-center-end mb5>
+  <div flex-center-between mb5>
+    <div pl16 font-size-3 c-gray>
+      <template v-if="user.login">
+        <a a-blue :href="user.url" target="_blank">{{ user.login }}</a>
+        <span mx2>-</span>
+        <a a-blue @click="onLogout">logout</a>
+      </template>
+    </div>
+
     <button btn :disabled="createLoading" @click="onCreateComment">
       <span v-if="createLoading" i-line-md:loading-alt-loop />
       <span>Comment</span>

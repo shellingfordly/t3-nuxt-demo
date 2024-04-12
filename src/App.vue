@@ -12,7 +12,7 @@ const showMore = computed(
 
 <template>
   <!-- <HelloWorld /> -->
-  <div container ma pb10>
+  <div container ma pb10 lt-sm:p5>
     <div p5 space-x-4>
       <span
         class="hc-gray i-material-symbols:light-mode dark:i-material-symbols:dark-mode"
