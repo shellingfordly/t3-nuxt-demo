@@ -8,26 +8,25 @@ import {
   getUserQuery,
   getIssueQuery,
 } from "./query";
-import { getEnv } from "../utils/env";
 import { formatUrl } from "../utils/url";
 
 const GITHUB_ACCESS_TOKEN = useLocalStorage("GITHUB_ACCESS_TOKEN", "");
 
 export class GithubComment {
-  //I_kwDOLrNqr86FF056
   private issueNodeId: string = "";
-  // private issueId: number = 0;
-  private clientId: string;
-  private clientSecret: string;
+  private author: string = "";
+  private repo: string = "";
+  private clientId: string = "";
+  private clientSecret: string = "";
   get githubToken() {
     return GITHUB_ACCESS_TOKEN.value;
   }
 
-  constructor() {
-    const env = getEnv();
-
-    this.clientId = env.clientId;
-    this.clientSecret = env.clientSecret;
+  initConfig(config: GithubConfig) {
+    this.author = config.author;
+    this.repo = config.repo;
+    this.clientId = config.clientId;
+    this.clientSecret = config.clientSecret;
   }
 
   private apiQueryMap = {
@@ -83,7 +82,7 @@ export class GithubComment {
       client_id: this.clientId,
       redirect_uri: window.location.href,
       scope: "public_repo user:email",
-      state: "vue-comment",
+      state: this.repo,
     });
   }
 
@@ -139,8 +138,8 @@ export class GithubComment {
   async getIssue(issueId: number) {
     const { data } = await this.fetch("https://api.github.com/graphql").post({
       query: getIssueQuery({
-        owner: "shellingfordly",
-        repo: "vue-comment",
+        owner: this.author,
+        repo: this.repo,
         issueId,
       }),
     });
@@ -156,8 +155,8 @@ export class GithubComment {
   async getComments(pageInfo: Partial<GithubCommentPageInfo>) {
     const { data } = await this.fetch("https://api.github.com/graphql").post({
       variables: {
-        owner: "shellingfordly",
-        repo: "vue-comment",
+        owner: this.author,
+        repo: this.repo,
         issueId: 1,
         perPage: 10,
       },
@@ -261,8 +260,8 @@ export class GithubComment {
   async getCommentReactions(issueId: string) {
     this.fetch("https://api.github.com/graphql").post({
       variables: {
-        owner: "shellingfordly",
-        repo: "vue-comment",
+        owner: this.author,
+        repo: this.repo,
         issueId,
         perPage: 100,
       },

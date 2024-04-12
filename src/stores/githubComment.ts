@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { GithubComment } from "../lib/github";
 import { useRouteQuery } from "@vueuse/router";
 import dayjs from "dayjs";
+import { getEnv } from "../lib/utils/env";
 
 export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   const _githubCode = useRouteQuery("code", "");
@@ -30,6 +31,13 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
 
   async function init() {
     if (isAuthed.value) {
+      const { clientId, clientSecret, githubAuthor, githubRepo } = getEnv();
+      _githubComment.initConfig({
+        clientId,
+        clientSecret,
+        repo: githubRepo,
+        author: githubAuthor
+      });
       await _githubComment.getIssue(1);
       getUserInfo();
       initComments();

@@ -1,13 +1,21 @@
+interface GithubConfig {
+  author: string;
+  repo: string;
+  clientId: string
+  clientSecret: string
+}
+
+
 interface GithubResult<T = any> {
   data: any | null;
   error: { message: string; type: string } | null;
 }
 
 interface GithubUserItem {
-  avatarUrl: string; // user avatar
   url: string; // user id
   login: string; // user name
   email: string; // user email
+  avatarUrl: string; // user avatar
 }
 interface GithubCommentReactionGroup {
   content: GithubCommentReactionType;
