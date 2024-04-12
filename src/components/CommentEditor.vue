@@ -12,6 +12,7 @@ const createLoading = ref(false);
 const content = ref("");
 const editorRef = ref<HTMLTextAreaElement | null>(null)
 const isFocus = ref(false);
+const btnDisabled = computed<boolean>(()=>createLoading.value || !content.value || !githubCommentStore.isAuthed)
 
 useEventListener(
   "click",
@@ -70,8 +71,8 @@ async function onEditComment() {
 </script>
 <template>
   <div
-    class="w-full p2 b-1 rounded resize-none"
-    :class="isFocus && 'b-2 b-gray-800'"
+    class="w-full h-30 box-border p2 b-default rounded resize-none"
+    :class="isFocus && 'b-2 b-blue dark:b-blue-800'"
     @click="onFocus"
   >
     <div
@@ -90,7 +91,15 @@ async function onEditComment() {
     <button v-if="isUpdateComment" btn-red @click="$emit('cancel')">
       Cancel
     </button>
-    <button btn :disabled="createLoading" @click="onEditComment">
+
+    <button
+      btn
+      cursor-not-allowed="createLoading && !content"
+      :class="[btnDisabled && 'cursor-not-allowed!']"
+      :disabled="btnDisabled"
+      @click="onEditComment"
+      title="post comment"
+    >
       <span v-if="createLoading" i-line-md:loading-alt-loop />
       <span>{{ isUpdateComment ? "Update Comment" : "Comment" }}</span>
     </button>
