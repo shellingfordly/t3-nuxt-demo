@@ -4,9 +4,27 @@
 
 This is a issue-based vue-comment component. It‘s inspiration comes in [vssue](https://github.com/meteorlxy/vssue).
 
-It's incomplete now. If you config Github-OAuth config, and create first issue, you can view all comments and add comment of the issue.
+If you config Github-OAuth config, and create first issue, you can view all comments and add comment of the issue.
 
-The other person can sign in github. But he/she can't add comment, because the access_token can't support to post comment that return from "https://github.com/login/oauth/access_token".
+## Config
+
+set github config
+
+get clientId and clientSecret form "New OAuth App"
+
+```bash
+VITE_CLIENT_ID=replace_me
+VITE_CLIENT_SECRET=replace_me
+VITE_GITHUB_AUTHOR=replace_me
+VITE_GITHUB_REPO=replace_me
+```
+
+## Run
+
+```
+pnpm install
+pnpm run dev
+```
 
 ## Contributing
 
@@ -17,3 +35,7 @@ The other person can sign in github. But he/she can't add comment, because the a
 ## Preview
 
 ![preview](./docs/img/preview.png)
+
+quote replay
+
+![quote replay](./docs/img/quote_replay.png)
