@@ -6,13 +6,17 @@ import App from "./App.vue";
 import { createPinia } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 import { setupDirective } from "./lib/directive";
+import Home from "./pages/Home.vue";
 
 const app = createApp(App);
 const pinia = createPinia();
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: [],
+  routes: [{
+    path: "/",
+    component: Home,
+  }],
 });
 
 setupDirective(app);
