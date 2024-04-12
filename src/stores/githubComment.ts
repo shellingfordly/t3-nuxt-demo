@@ -12,6 +12,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   const commentContent = ref("");
   const commentTotalCount = ref(Infinity);
   const userInfo = ref<Partial<GithubUserItem>>({});
+  const isAuthed = computed(() => _githubComment.isAuthed);
   const router = useRouter();
 
   watch(
@@ -25,10 +26,10 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     { immediate: true }
   );
 
-  watch(() => _githubComment.isAuthed, init, { immediate: true });
+  watch(isAuthed, init, { immediate: true });
 
   async function init() {
-    if (_githubComment.isAuthed) {
+    if (isAuthed.value) {
       await _githubComment.getIssue(1);
       getUserInfo();
       initComments();
@@ -53,7 +54,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   }
 
   async function initComments() {
-    if (!_githubComment.isAuthed) return;
+    if (!isAuthed.value) return;
 
     const result = await _githubComment.getComments({ sort: "last" });
     comments.value = sortComments(result.nodes);
@@ -62,7 +63,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   }
 
   async function updateComments() {
-    if (!_githubComment.isAuthed) return;
+    if (!isAuthed.value) return;
 
     const result = await _githubComment.getComments(pageInfo);
     const newComments = sortComments(result.nodes);
@@ -72,7 +73,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   }
 
   async function createComment(content: string, id: string) {
-    if (!_githubComment.isAuthed) return;
+    if (!isAuthed.value) return;
 
     const result = await _githubComment.createComment(content, id);
     if (result.errors && result.errors.length > 0) {
@@ -89,7 +90,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     commentId: string,
     content: GithubCommentReactionType
   ) {
-    if (!_githubComment.isAuthed) return;
+    if (!isAuthed.value) return;
 
     _githubComment.reactionComment(commentId, content);
   }
@@ -99,11 +100,35 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   }
 
   async function getUserInfo() {
-    if (!_githubComment.isAuthed) return;
+    if (!isAuthed.value) return;
 
     userInfo.value = (await _githubComment.getUser()) || {};
 
     return userInfo.value;
+  }
+
+  async function deleteComment(commentId: string) {
+    const result = await _githubComment.deleteComment(commentId);
+    if (result.error) {
+      alert(result.error.message);
+    }
+    return result.data;
+  }
+
+  async function editorComment(commentId: string, content: string) {
+    const result = await _githubComment.editorComment(commentId, content);
+    if (result.error) {
+      alert(result.error.message);
+    }
+
+    return result.data;
+  }
+
+  function onUpdateComment(comment: GithubCommentItem) {
+    const index = comments.value.findIndex((item) => item.id == comment.id);
+    if (index !== -1) {
+      comments.value[index] = comment;
+    }
   }
 
   function logout() {
@@ -116,6 +141,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     commentContent,
     commentTotalCount,
     userInfo,
+    isAuthed,
     initComments,
     updateComments,
     createComment,
@@ -123,6 +149,9 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     getReactionsComment,
     loginAuthorize,
     getUserInfo,
+    deleteComment,
+    editorComment,
     logout,
+    onUpdateComment,
   };
 });

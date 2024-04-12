@@ -1,7 +1,13 @@
+interface GithubResult<T = any> {
+  data: any | null;
+  error: { message: string; type: string } | null;
+}
+
 interface GithubUserItem {
   avatarUrl: string; // user avatar
   url: string; // user id
   login: string; // user name
+  email: string; // user email
 }
 interface GithubCommentReactionGroup {
   content: GithubCommentReactionType;
@@ -13,6 +19,7 @@ interface GithubCommentItem {
   bodyHTML: string; // create time
   createdAt: string; // comment url
   id: string;
+  url: string;
   author: GithubUserItem;
   reactionGroups: GithubCommentReactionGroup[];
 }

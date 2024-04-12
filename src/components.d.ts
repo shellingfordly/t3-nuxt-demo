@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     CommentAction: typeof import('./components/CommentAction.vue')['default']
     CommentEditor: typeof import('./components/CommentEditor.vue')['default']
+    CommentHeader: typeof import('./components/CommentHeader.vue')['default']
     CommentItem: typeof import('./components/CommentItem.vue')['default']
     CommentList: typeof import('./components/CommentList.vue')['default']
     CommentReaction: typeof import('./components/CommentReaction.vue')['default']

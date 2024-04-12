@@ -49,9 +49,9 @@ export class GithubComment {
     });
 
     return {
-      post: async (params: any) => {
+      post: async <T = any>(params: any) => {
         const result = await fetch.post(params);
-        return JSON.parse(result.data.value as string);
+        return JSON.parse(result.data.value as string) as T;
       },
       get: fetch.get,
       delete: fetch.delete,
@@ -82,7 +82,7 @@ export class GithubComment {
     window.location.href = formatUrl(url, {
       client_id: this.clientId,
       redirect_uri: window.location.href,
-      scope: "public_repo",
+      scope: "public_repo user:email",
       state: "vue-comment",
     });
   }
@@ -191,7 +191,7 @@ export class GithubComment {
    * @see https://developer.github.com/v4/mutation/updateissuecomment/
    * @see https://developer.github.com/v4/input_object/updateissuecommentinput/
    */
-  async editorComment(commentId: string, content: string) {
+  async editorComment(commentId: string, content: string): Promise<GithubResult<GithubCommentItem>> {
     const result = await this.fetch("https://api.github.com/graphql").post({
       variables: {
         commentId,
@@ -199,7 +199,21 @@ export class GithubComment {
       },
       query: this.apiQueryMap.editor,
     });
-    return result.data.updateIssueComment.issueComment;
+
+    if (result.errors && result.errors.length) {
+      return {
+        data: null,
+        error: {
+          message: result.errors[0].message,
+          type: result.errors[0].type,
+        },
+      };
+    } else {
+      return {
+        data: result.data.updateIssueComment.issueComment,
+        error: null,
+      };
+    }
   }
 
   /**
@@ -207,13 +221,28 @@ export class GithubComment {
    *
    * @see https://developer.github.com/v4/mutation/deleteissuecomment/
    */
-  async deleteComment(commentId: string) {
-    this.fetch("https://api.github.com/graphql").post({
+  async deleteComment(commentId: string): Promise<GithubResult> {
+    const result = await this.fetch("https://api.github.com/graphql").post({
       variables: {
         commentId,
       },
       query: this.apiQueryMap.delete,
     });
+
+    if (result.errors && result.errors.length) {
+      return {
+        data: null,
+        error: {
+          message: result.errors[0].message,
+          type: result.errors[0].type,
+        },
+      };
+    } else {
+      return {
+        data: result.data,
+        error: null,
+      };
+    }
   }
 
   /**

@@ -58,6 +58,7 @@ export function getCommentsQuery({
         bodyHTML
         createdAt
         updatedAt
+        url
         author {
           avatarUrl
           login
@@ -209,6 +210,7 @@ export function getUserQuery() {
       login
       avatarUrl
       url
+      email
     }
   }`;
 }

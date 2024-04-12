@@ -50,7 +50,7 @@ const showMore = computed(
         </a>
       </div>
     </div>
-    <CommentEditor />
+    <CommentHeader />
     <CommentList />
     <div v-if="showMore" flex-center-center p5>
       <button p2 c-gray a-blue @click="githubCommentStore.updateComments">

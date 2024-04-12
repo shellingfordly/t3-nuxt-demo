@@ -1,61 +1,64 @@
 <script setup lang="ts">
 import { useGithubCommentStore } from "../stores/githubComment";
 
-const content = ref("");
+const emit = defineEmits<{
+  update: [comment: GithubCommentItem];
+  cancel: [void];
+}>();
+const props = defineProps<{ commentId?: string; commentBody?: string }>();
+const isUpdateComment = computed(() => !!props.commentId);
 const githubCommentStore = useGithubCommentStore();
-const user = computed(() => githubCommentStore.userInfo);
 const createLoading = ref(false);
+const content = ref("");
 
-async function onCreateComment() {
-  createLoading.value = true;
+watchEffect(() => {
+  if (props.commentBody) {
+    content.value = props.commentBody;
+  }
+});
+
+async function createComment() {
   const success = await githubCommentStore.createComment(content.value, "");
   if (success) {
     await githubCommentStore.initComments();
   }
   content.value = "";
+}
+
+async function updateComment() {
+  if (props?.commentId) {
+    const data = await githubCommentStore.editorComment(props?.commentId, content.value);
+
+    if (data) {
+      emit("update", data);
+      githubCommentStore.onUpdateComment(data);
+    }
+  }
+}
+
+async function onEditComment() {
+  createLoading.value = true;
+
+  console.log("edit");
+
+  if (isUpdateComment.value) updateComment();
+  else createComment();
+
   createLoading.value = false;
-}
-
-function onLogin() {
-  githubCommentStore.loginAuthorize();
-}
-
-function onLogout() {
-  githubCommentStore.logout();
 }
 </script>
 <template>
   <div flex>
-    <div
-      class="flex-center-center w-12 h-12 mr4 font-size-10 c-gray-500 dark:c-gray-300 cursor-pointer"
-      title="Login"
-    >
-      <span v-if="!user.login" i-mdi:github @click="onLogin" />
-      <a v-else block :href="user.url" target="_blank">
-        <img class="w-10 h-10 rd-10" v-lazy="user.avatarUrl" alt="" />
-      </a>
-    </div>
-
-    <div flex-1>
-      <h4 font-size-4 font-500 mb3>Add a comment</h4>
-      <textarea
-        v-model="content"
-        class="w-full h-20 py2 px4 mb5 box-border b-1 rounded resize-none fs4"
-      />
-    </div>
+    <textarea
+      v-model="content"
+      class="w-full h-20 p2 box-border b-1 rounded resize-none fs4"
+    />
   </div>
-  <div flex-center-between mb5>
-    <div pl16 font-size-3 c-gray>
-      <template v-if="user.login">
-        <a a-blue :href="user.url" target="_blank">{{ user.login }}</a>
-        <span mx2>-</span>
-        <a a-blue @click="onLogout">logout</a>
-      </template>
-    </div>
-
-    <button btn :disabled="createLoading" @click="onCreateComment">
+  <div flex-center-end p2 space-x-2>
+    <button v-if="isUpdateComment" btn-red @click="$emit('cancel')">Cancel</button>
+    <button btn :disabled="createLoading" @click="onEditComment">
       <span v-if="createLoading" i-line-md:loading-alt-loop />
-      <span>Comment</span>
+      <span>{{ isUpdateComment ? "Update Comment" : "Comment" }}</span>
     </button>
   </div>
 </template>

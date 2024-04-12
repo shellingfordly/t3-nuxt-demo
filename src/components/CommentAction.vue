@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useGithubCommentStore } from "../stores/githubComment";
+
+const props = defineProps<{ comment: GithubCommentItem }>();
+const githubCommentStore = useGithubCommentStore();
 const show = ref(false);
 
 useEventListener(
@@ -15,10 +19,17 @@ function onClickShow(event: Event) {
   show.value = !show.value;
 }
 
+function onCopyLink() {
+  navigator.clipboard.writeText(props.comment.url);
+}
+
 function onQuoteComment() {}
-function onEditComment() {}
-function onHideComment() {}
-function onDeleteComment() {}
+
+async function onDeleteComment() {
+  if (!window.confirm("Confirm to delete this comment ?")) return;
+  const success = await githubCommentStore.deleteComment(props.comment.id);
+  if (success) githubCommentStore.initComments();
+}
 </script>
 <template>
   <div relative>
@@ -31,7 +42,7 @@ function onDeleteComment() {}
     >
       <ul class="py-2">
         <li>
-          <a href="#" class="block px-4 py-2 hbg-gray"> Copy link </a>
+          <a href="#" class="block px-4 py-2 hbg-gray" @click="onCopyLink"> Copy link </a>
         </li>
         <li>
           <a href="#" class="block px-4 py-2 hbg-gray" @click="onQuoteComment">
@@ -40,20 +51,12 @@ function onDeleteComment() {}
         </li>
       </ul>
       <div class="py-2">
-        <a
-          href="#"
-          class="block px-4 py-2 text-sm hbg-gray"
-          @click="onEditComment"
-        >
+        <a href="#" class="block px-4 py-2 text-sm hbg-gray" @click="$emit('editor')">
           Edit
         </a>
-        <a
-          href="#"
-          class="block px-4 py-2 text-sm hbg-gray"
-          @click="onHideComment"
-        >
+        <!-- <a href="#" class="block px-4 py-2 text-sm hbg-gray" @click="onHideComment">
           Hide
-        </a>
+        </a> -->
         <a
           href="#"
           class="block px-4 py-2 text-sm c-red hover:c-white hover:bg-red"
@@ -65,4 +68,3 @@ function onDeleteComment() {}
     </div>
   </div>
 </template>
-<style scoped></style>

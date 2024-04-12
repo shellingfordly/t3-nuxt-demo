@@ -13,25 +13,30 @@ export default defineConfig({
     ["cp", "cursor-pointer"],
     [
       "btn",
-      "px-4 py-1 rounded inline-block bg-stone-700 text-white cursor-pointer !outline-none hover:bg-stone-800 disabled:cursor-default disabled:bg-gray-600 disabled:opacity-50",
+      "px-4 py-1 rounded inline-block bg-stone-500 hover:bg-stone-400 dark:bg-stone-800 hover:dark:bg-stone-700 text-white cursor-pointer !outline-non disabled:cursor-default disabled:bg-gray-600 disabled:opacity-50",
     ],
     [
       "icon-btn",
       "inline-block cursor-pointer select-none opacity-75 transition duration-200 ease-in-out hover:opacity-100 hover:text-teal-600",
     ],
     ["b-default", `b-1 b-rounded b-gray-200 dark:b-gray-700`],
+    [
+      /^btn-(\w+)/,
+      ([_, color]) =>
+        `px-4 py-1 rounded inline-block bg-${color}-300 dark:bg-${color}-800 hover:bg-${color}-200 hover:dark:bg-${color}-900 disabled:cursor-default disabled:bg-gray-600 disabled:opacity-50 text-white cursor-pointer !outline-none`,
+    ],
     [/b-(\w+)-default/, ([_, p]) => `b-${p}-1 b-gray-200 dark:b-gray-700`],
     [
-      /a-(\w+)/,
+      /^a-(\w+)/,
       ([_, color]) =>
         `cp cursor-pointer hover:underline hover:c-${color}-400 hover:dark:c-${color}-600`,
     ],
     [
-      /hbg-(\w+)/,
+      /^hbg-(\w+)/,
       ([_, color]) => `hover:bg-${color}-100 dark:hover:bg-${color}-600`,
     ],
     [
-      /hc-(\w+)/,
+      /^hc-(\w+)/,
       ([_, color]) => `cp hover:c-${color}-400 hover:dark:c-${color}-600`,
     ],
     [
