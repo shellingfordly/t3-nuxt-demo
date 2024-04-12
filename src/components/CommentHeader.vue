@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { useGithubCommentStore } from "../stores/githubComment";
 
-// const content = ref("");
 const githubCommentStore = useGithubCommentStore();
 const user = computed(() => githubCommentStore.userInfo);
 const show = ref(false);
-
 
 useEventListener(
   "click",
@@ -13,7 +11,6 @@ useEventListener(
     if (show.value) show.value = false;
   },
   false
-
 );
 
 function onShow(e: Event) {
@@ -32,8 +29,14 @@ function onLogout() {
 </script>
 <template>
   <div flex>
-    <div class="flex-center-center w-12 h-12 mr4 font-size-10 c-gray-500 dark:c-gray-300 cursor-pointer" title="Login">
-      <span v-if="!githubCommentStore.isAuthed" i-mdi:github @click="onLogin" />
+    <div class="flex-center-center w-12 h-12 mr4">
+      <div v-if="!githubCommentStore.isAuthed"
+        class="flex-center-center w-11 h-11 overflow-hidden b-2 rd-full cursor-pointer b-gray-200 dark:b-gray-700"
+        @click="onLogin" title="Login">
+        <div class="flex-center-center w-9 h-9 rd-full bg-gray-200 dark:bg-gray-700">
+          <span class="font-size-2.5 c-gray-500 dark:c-gray-300">Login</span>
+        </div>
+      </div>
       <div v-else relative>
         <img class="w-10 h-10 rd-10" v-lazy="user.avatarUrl" @click="onShow" />
         <!-- Dropdown menu -->
