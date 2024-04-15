@@ -6,7 +6,8 @@ const githubCommentStore = useGithubCommentStore();
 const showMore = computed(
   () =>
     githubCommentStore.comments.length > 0 &&
-    githubCommentStore.comments.length < githubCommentStore.commentTotalCount
+    githubCommentStore.comments.length < githubCommentStore.commentTotalCount &&
+    !githubCommentStore.loading
 );
 </script>
 
@@ -53,7 +54,7 @@ const showMore = computed(
     <CommentHeader />
     <CommentList v-if="githubCommentStore.isAuthed" />
     <div
-      v-else
+      v-if="!githubCommentStore.isAuthed"
       py5
       text-center
       underline
@@ -61,6 +62,10 @@ const showMore = computed(
       @click="githubCommentStore.loginAuthorize"
     >
       Login View Comments
+    </div>
+    <div v-if="githubCommentStore.loading" py5 text-center c-gray>
+      <span i-line-md:loading-alt-loop />
+      <p mt2>loading...</p>
     </div>
     <div v-if="showMore" flex-center-center p5>
       <button p2 c-gray a-blue @click="githubCommentStore.updateComments">

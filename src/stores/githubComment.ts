@@ -21,6 +21,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   const isAuthed = computed(() => _githubComment.isAuthed);
   const router = useRouter();
   const quoteComment = ref<Partial<GithubCommentItem>>({})
+  const loading = ref(false)
 
 
   watch(
@@ -62,20 +63,27 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
   async function initComments() {
     if (!isAuthed.value) return;
 
+    loading.value = true
+
     const result = await _githubComment.getComments({ sort: "last" });
     comments.value = sortComments(result.nodes);
 
     setPageInfo(result);
+    loading.value = false
   }
 
   async function updateComments() {
     if (!isAuthed.value) return;
+
+    loading.value = true
 
     const result = await _githubComment.getComments(pageInfo);
     const newComments = sortComments(result.nodes);
     comments.value = [...comments.value, ...newComments];
 
     setPageInfo(result);
+    loading.value = false
+
   }
 
   async function createComment(content: string, id: string) {
@@ -157,6 +165,7 @@ export const useGithubCommentStore = defineStore("githubCommentStore", () => {
     commentTotalCount,
     userInfo,
     isAuthed,
+    loading,
     initComments,
     updateComments,
     createComment,
